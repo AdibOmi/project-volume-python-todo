@@ -37,24 +37,55 @@ def show_menu():
     print()
     print("1. Add a task")
     print("2. View Tasks")
-    print("3. Delete a Task")
-    print("4. Exit")
+    print("3. Mark Task as Done")
+    print("4. Delete a Task")
+    print("5. Exit")
+
+# def add_task():
+#     task = input("Enter a new task: ")
+#     #input pauses and waits for user input
+#     tasks.append(task)
+#     print("Task added successfully")
 
 def add_task():
-    task = input("Enter a new task: ")
-    #input pauses and waits for user input
+    title=input("Enter a new task: ").strip()
+    if title=="":
+        print("Task cannot be empty")
+        return
+    task={
+        "title": title,
+        "done": False   #default
+    }
+    #tasks are now dictionaries, not strings
     tasks.append(task)
-    print("Task added successfully")
+    save_tasks()
+    print("Task added successfully!")
+
 
 def view_tasks():
     if not tasks:
         print("No tasks found!")
         return
-    print("\nTasks:")
-    print()
     for index, task in enumerate(tasks, start=1):
-        print(f"{index}. {task}")
-    #f string allows to use variables 
+       status="✅" if task["done"] else "❌"
+       print(f"{index}.{status} {task['title']}")
+
+def mark_task():
+    view_tasks()
+    if not tasks():
+        return
+    choice = input("Enter task number to mark as done: ")
+    if not choice.isdigit():
+        print("Invalid input")
+        return
+    choice=int(choice)
+    if choice < 1 or choice > len(tasks):
+        print("Task number out of range")
+        return
+    tasks[choice-1]["done"]=True
+    save_tasks()
+    print("Task marked as done")
+
 
 def delete_task():
     view_tasks()
@@ -86,8 +117,10 @@ while True:
     elif choice == "2":
         view_tasks()
     elif choice == "3":
-        delete_task()
+        mark_task()
     elif choice == "4":
+        delete_task()
+    elif choice == "5":
         print("Peace Out!!")
         break
     else:
