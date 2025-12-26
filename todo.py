@@ -1,5 +1,36 @@
+import json
+file_name = "tasks.json"
+#tasks get saved here permanently
+
 tasks = []
 #lists grow and shrink dynamically
+
+
+def load_tasks():
+    global tasks
+    #global used as it will update our main "tasks" list
+    try:
+        with open(file_name, "r") as f:
+        #file opened in read mode
+            tasks = json.load(f)
+        if not isinstance(tasks, list):
+            tasks=[]
+            #reset if the file has something but a list
+    except FileNotFoundError:
+        tasks=[]
+        #create a file if doesnt exist
+    except json.JSONDecodeError:
+        tasks=[]
+        #file exists but corrupted or empty invalid json, reset it
+
+def save_tasks():
+    with open(file_name, "w") as f:
+    #opened file in write mode
+        json.dump(tasks, f, indent=2)
+        #json.dump writes python objects into JSON text
+        #indent is basically indentation
+    
+
 
 def show_menu():
     print("\nTo Do List")
@@ -42,6 +73,9 @@ def delete_task():
     removed_task=tasks.pop(task_number-1)
     #-1 because python lists start from 0
     print(f"Removed task {removed_task}")
+
+load_tasks()
+
 
     
 while True:
